@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:quiz_1/helpers/read_json.dart';
 import 'package:quiz_1/question_1/helpers/date_helper.dart';
+import 'package:quiz_1/question_1/models/ai_model/company_model.dart';
 import 'package:quiz_1/question_1/models/freezed/company_model.dart';
 import 'package:quiz_1/question_1/models/json_serializable/company_model.dart';
+import 'package:quiz_1/question_1/models/manual_modeling/company_model.dart';
 import 'package:quiz_1/widgets/default_button.dart';
 
 class Question1Screen extends StatefulWidget {
@@ -86,6 +88,39 @@ class _Question1ScreenState extends State<Question1Screen> {
                       dropDownValue = value!;
                     });
                   },
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: DefaultButton(
+                    onPressed: () async {
+                      String jsonString = await readJsonFile(dropDownValue);
+                      setState(() {
+                        modelType = 'Manual';
+                        company = ManualCompanyModel.fromJson(
+                            jsonDecode(jsonString)['company']);
+                      });
+                    },
+                    label: 'Manual',
+                  ),
+                ),
+                const SizedBox(
+                  width: 2,
+                ),
+                Expanded(
+                  child: DefaultButton(
+                    onPressed: () async {
+                      String jsonString = await readJsonFile(dropDownValue);
+                      setState(() {
+                        modelType = 'Ai';
+                        company =
+                            AiCompanyModel.fromJson(jsonDecode(jsonString));
+                      });
+                    },
+                    label: 'Ai',
+                  ),
                 ),
               ],
             ),
